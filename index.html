@@ -559,8 +559,9 @@ let refreshCount = 0;
 
 const spinnerMaxSize = 32;       // px
 const spinnerFontStepTrigger = triggerThreshold / 2; // fully visible halfway
-const spinnerBaseTop = 32;   // minimum distance from page top (px)
+const spinnerBaseTop = 64;   // minimum distance from page top (px)
 const spinnerMaxLift = -40;
+const fontStart = 5;
 
 window.addEventListener("touchstart", e => {
   if (window.scrollY === 0 && !isRefreshing) {
@@ -578,19 +579,23 @@ window.addEventListener("touchmove", e => {
       let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
       wrapper.style.transform = `translateY(${pull}px)`;
     
-      // --- spinner margin-top (starts at 26px, moves up only after some pull)
+      // --- spinner margin-top (float up after some pull)
       let liftStart = 40; // px of pulling before spinner starts floating
       let lift = 0;
       if (currentY > liftStart) {
         lift = -(currentY - liftStart) * 0.5; // float upward, half speed
       }
-      // clamp so it never goes above spinnerMaxLift
       lift = Math.max(lift, spinnerMaxLift);
-    
       spinner.style.marginTop = `${spinnerBaseTop + lift}px`;
     
-      // --- spinner font-size (gradual grow, max at halfway threshold)
-      let scale = Math.min(currentY / (triggerThreshold / 2), 1);
+      // --- spinner font-size (start growing only after 5px)
+      let scale = 0;
+      if (currentY > fontStart) {
+        scale = Math.min(
+          (currentY - fontStart) / (spinnerFontStepTrigger - fontStart),
+          1
+        );
+      }
       spinner.style.fontSize = `${scale * spinnerMaxSize}px`;
     }
 });
@@ -639,6 +644,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
