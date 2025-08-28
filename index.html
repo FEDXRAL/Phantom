@@ -623,7 +623,7 @@ function updatePull() {
   const afterValue = document.getElementById("after").value; 
   const ownedDiv = document.getElementById("owned");
 
-  ownedDiv.textContent = `${afterValue} SOL`;
+  ownedDiv.textContent = `${formatSOL(afterValue)} SOL`;
   updateSolanaData();
 }
 
@@ -726,6 +726,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
