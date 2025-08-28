@@ -547,20 +547,22 @@ async function updateSolanaData() {
 updateSolanaData();
 
 const wrapper = document.getElementById("content-wrapper");
+const spinner = document.querySelector(".spinner.center");
 
 let startY = 0;
 let currentY = 0;
 let isPulling = false;
-const snapHeight = 50;    // visual suspend position
-const triggerThreshold = 120; // how far user must pull to trigger
+const snapHeight = 80;         // visual suspend position
+const triggerThreshold = 100;  // trigger refresh
 let isRefreshing = false;
-let refreshCount = 0; // track number of refreshes
+let refreshCount = 0;
 
 window.addEventListener("touchstart", e => {
   if (window.scrollY === 0 && !isRefreshing) {
     startY = e.touches[0].clientY;
     isPulling = true;
-    wrapper.style.transition = "none"; // disable during drag
+    wrapper.style.transition = "none";
+    spinner.style.transition = "none"; // follow instantly
   }
 });
 
@@ -568,9 +570,13 @@ window.addEventListener("touchmove", e => {
   if (!isPulling) return;
   currentY = e.touches[0].clientY - startY;
   if (currentY > 0) {
-    // dampen pull: slower as you drag more
     let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
     wrapper.style.transform = `translateY(${pull}px)`;
+
+    // make spinner "float" apart
+    // base margin = 1.6rem (~25px), then add more depending on pull
+    let extra = Math.min(pull * 0.4, 80); // cap so it doesn’t fly away
+    spinner.style.marginTop = `${25 + extra}px`;
   }
 });
 
@@ -578,16 +584,17 @@ window.addEventListener("touchend", () => {
   if (!isPulling) return;
   isPulling = false;
 
-  // apply smooth transition first
+  // smooth transitions for snap back
   wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+  spinner.style.transition = "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
 
   if (currentY > triggerThreshold) {
-    // pulled enough → snap smoothly to snapHeight
     wrapper.style.transform = `translateY(${snapHeight}px)`;
+    spinner.style.marginTop = "25px"; // back to default
     triggerRefresh();
   } else {
-    // not enough → smoothly slide back
     wrapper.style.transform = "translateY(0)";
+    spinner.style.marginTop = "25px"; // back smoothly
   }
 });
 
@@ -595,7 +602,6 @@ function triggerRefresh() {
   isRefreshing = true;
   refreshCount++;
 
-  // Decide what to call depending on refresh count
   if (refreshCount === 1 || refreshCount === 2) {
     updateSolanaData();
   } else if (refreshCount === 3) {
@@ -607,12 +613,14 @@ function triggerRefresh() {
 
   setTimeout(() => {
     wrapper.style.transform = "translateY(0)";
+    spinner.style.marginTop = "25px"; // make sure it's reset
     isRefreshing = false;
-  }, 1000);
+  }, 2000);
 }
 </script>
 </body>
 </html>
+
 
 
 
