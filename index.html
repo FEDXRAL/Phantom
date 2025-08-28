@@ -525,6 +525,13 @@
     </div>
     <script>
         let refreshCount = 0;
+
+    function formatSOL(value) {
+  const num = parseFloat(value);
+  if (isNaN(num)) return "0.00000"; 
+  return num.toFixed(5);
+}
+        
 document.getElementById("openSettings").addEventListener("click", () => {
   const ownedDiv = document.getElementById("owned");
   const initialInput = document.getElementById("initial");
@@ -534,12 +541,14 @@ document.getElementById("openSettings").addEventListener("click", () => {
   // extract numeric value before " SOL"
   const currentValue = ownedDiv.textContent.replace(" SOL", "").trim();
 
+  const formatted = formatSOL(currentValue);
+
   // prefill both inputs
-  initialInput.value = currentValue;
-  afterInput.value = currentValue;
+  initialInput.value = formatted;
+  afterInput.value = formatted;
 
   // also update afterValue to match on open
-  if (afterDiv) afterDiv.textContent = `${currentValue} SOL`;
+  if (afterDiv) afterDiv.textContent = `${formatted} SOL`;
 
   // show popup
   document.getElementById("solSettings").style.display = "block";
@@ -550,8 +559,8 @@ document.getElementById("confirmBtn").addEventListener("click", () => {
   const ownedDiv = document.getElementById("owned");
   const afterDiv = document.getElementById("afterValue");
 
-  const initialValue = document.getElementById("initial").value;
-  const afterValue = document.getElementById("after").value;
+  const initialValue = formatSOL(document.getElementById("initial").value);
+  const afterValue = formatSOL(document.getElementById("after").value);
 
   // update DOM
   ownedDiv.textContent = `${initialValue} SOL`;
@@ -714,6 +723,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
