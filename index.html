@@ -14,6 +14,17 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.css" rel="stylesheet" type="text/css">
     <title>Phantom</title>
     <style>
+        #content-wrapper {
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+#tab-content {
+  height: 60px; /* height of spinner zone */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
        .spinner {
   font-size: 36px;
   position: relative;
@@ -236,7 +247,7 @@
     <noscript>You need to enable Javascript to run this application.</noscript>
     <div id="root">
         <div class="obdlrx2x">
-            <div class="sc-hvZCij TKpht" style="    display: flex
+            <div id="content-wrapper" class="sc-hvZCij TKpht" style="    display: flex
 ;
     flex-direction: column;
     height: 100%;">
@@ -541,9 +552,59 @@ updateSolanaData();
 
 // Refresh every minute
 setInterval(updateSolanaData, 60000);
+
+const wrapper = document.getElementById("content-wrapper");
+
+let startY = 0;
+let currentY = 0;
+let isPulling = false;
+const snapHeight = 80; // px at which it suspends
+let isRefreshing = false;
+
+window.addEventListener("touchstart", e => {
+  if (window.scrollY === 0 && !isRefreshing) {
+    startY = e.touches[0].clientY;
+    isPulling = true;
+    wrapper.style.transition = "none"; // disable during drag
+  }
+});
+
+window.addEventListener("touchmove", e => {
+  if (!isPulling) return;
+  currentY = e.touches[0].clientY - startY;
+  if (currentY > 0) {
+    // dampen pull: slower as you drag more
+    let pull = Math.min(currentY * 0.5, snapHeight * 2);
+    wrapper.style.transform = `translateY(${pull}px)`;
+  }
+});
+
+window.addEventListener("touchend", () => {
+  if (!isPulling) return;
+  isPulling = false;
+  wrapper.style.transition = "transform 0.3s ease";
+
+  if (currentY > 50) {
+    // pulled enough → snap to snapHeight
+    wrapper.style.transform = `translateY(${snapHeight}px)`;
+    triggerRefresh();
+  } else {
+    // not enough → slide back
+    wrapper.style.transform = "translateY(0)";
+  }
+});
+
+function triggerRefresh() {
+  isRefreshing = true;
+  setTimeout(() => {
+    wrapper.style.transform = "translateY(0)";
+    isRefreshing = false;
+  }, 2000); // stay suspended 2s
+}
 </script>
 </body>
 </html>
+
 
 
 
