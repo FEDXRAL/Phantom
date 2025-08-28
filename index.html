@@ -552,17 +552,21 @@ const spinner = document.querySelector(".spinner.center");
 let startY = 0;
 let currentY = 0;
 let isPulling = false;
-const snapHeight = 80;         // visual suspend position
-const triggerThreshold = 100;  // trigger refresh
+const snapHeight = 80;           // visual suspend position
+const triggerThreshold = 100;    // how far you must pull to trigger
 let isRefreshing = false;
 let refreshCount = 0;
+
+const spinnerMaxSize = 32;       // px
+const spinnerFontStepTrigger = triggerThreshold / 2; // fully visible halfway
+const spinnerMaxLift = -50;      // px (max negative margin-top)
 
 window.addEventListener("touchstart", e => {
   if (window.scrollY === 0 && !isRefreshing) {
     startY = e.touches[0].clientY;
     isPulling = true;
     wrapper.style.transition = "none";
-    spinner.style.transition = "none"; // follow instantly
+    spinner.style.transition = "none";
   }
 });
 
@@ -573,10 +577,13 @@ window.addEventListener("touchmove", e => {
     let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
     wrapper.style.transform = `translateY(${pull}px)`;
 
-    // spinner floats upward: margin-top goes negative
-    // Example: pull 150px → spinner marginTop = -75px
-    let extra = Math.min(currentY * 0.5, 75); 
-    spinner.style.marginTop = `${-extra}px`;
+    // --- spinner margin-top (floats up, capped at spinnerMaxLift)
+    let lift = Math.max(-currentY * 0.5, spinnerMaxLift);
+    spinner.style.marginTop = `${lift}px`;
+
+    // --- spinner font-size (gradual grow up to 32px)
+    let scale = Math.min(currentY / spinnerFontStepTrigger, 1); // 0 → 1
+    spinner.style.fontSize = `${scale * spinnerMaxSize}px`;
   }
 });
 
@@ -585,15 +592,18 @@ window.addEventListener("touchend", () => {
   isPulling = false;
 
   wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
-  spinner.style.transition = "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+  spinner.style.transition = 
+    "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1), font-size 0.3s ease";
 
   if (currentY > triggerThreshold) {
     wrapper.style.transform = `translateY(${snapHeight}px)`;
-    spinner.style.marginTop = "0px"; // snap back into place
+    spinner.style.marginTop = "0px";     // reset position
+    spinner.style.fontSize = `${spinnerMaxSize}px`; // stay visible during refresh
     triggerRefresh();
   } else {
     wrapper.style.transform = "translateY(0)";
-    spinner.style.marginTop = "0px"; // snap back into place
+    spinner.style.marginTop = "0px";
+    spinner.style.fontSize = "0px"; // disappears if not enough pull
   }
 });
 
@@ -612,13 +622,16 @@ function triggerRefresh() {
 
   setTimeout(() => {
     wrapper.style.transform = "translateY(0)";
-    spinner.style.marginTop = "25px"; // make sure it's reset
+    spinner.style.marginTop = "0px";
+    spinner.style.fontSize = "0px"; // fade back to hidden
     isRefreshing = false;
   }, 2000);
 }
+
 </script>
 </body>
 </html>
+
 
 
 
