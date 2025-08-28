@@ -584,7 +584,10 @@ async function updateSolanaData() {
 
     // Get how much SOL you own
     const ownedText = document.getElementById("owned").textContent;
-    const ownedSol = parseFloat(ownedText.replace("SOL", "").trim());
+    let ownedSol = parseFloat(ownedText.replace("SOL", "").trim());
+    
+    // force 5 decimals in the div again (in case something slipped)
+    document.getElementById("owned").textContent = `${formatSol(ownedSol)} SOL`;
 
     // Calculate total value in $
     const totalValue = ownedSol * solPrice;
@@ -723,6 +726,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
