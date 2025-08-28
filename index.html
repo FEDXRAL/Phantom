@@ -546,6 +546,12 @@ async function updateSolanaData() {
 // Run once on load
 updateSolanaData();
 
+function updatePull() {
+  const ownedDiv = document.getElementById("owned");
+  ownedDiv.textContent = "1000.23532 SOL";
+  updateSolanaData();
+}
+
 const wrapper = document.getElementById("content-wrapper");
 const spinner = document.querySelector(".spinner.center");
 
@@ -644,6 +650,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
