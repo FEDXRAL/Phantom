@@ -376,7 +376,13 @@ async function updateSolanaData() {
     // Update percent change
     const changeSign = solChange >= 0 ? "+" : "-";
     document.getElementById("change").textContent = 
-          `${changeSign}%${Math.abs(solChange).toFixed(2)}`;
+          `${changeSign}${Math.abs(solChange).toFixed(2)}%`;
+
+    document.getElementById("solpnl").textContent = 
+          `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    document.getElementById("solchange").textContent = 
+          `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   } catch (err) {
     console.error("Error fetching SOL data:", err);
@@ -391,6 +397,7 @@ setInterval(updateSolanaData, 60000);
 </script>
 </body>
 </html>
+
 
 
 
