@@ -351,7 +351,7 @@
     <script>
 async function updateSolanaData() {
   try {
-    // Get SOL price + % change (CoinGecko is free + no API key needed)
+    // Get SOL price + % change
     const priceRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true");
     const priceData = await priceRes.json();
 
@@ -364,16 +364,19 @@ async function updateSolanaData() {
 
     // Calculate total value in $
     const totalValue = ownedSol * solPrice;
-    document.getElementById("money").textContent = `$${totalValue.toFixed(2)}`;
+    document.getElementById("money").textContent = 
+      `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // Calculate today's PnL (based on change %)
     const pnl = totalValue * (solChange / 100);
     const pnlSign = pnl >= 0 ? "+" : "-";
-    document.getElementById("pnl").textContent = `${pnlSign} $${Math.abs(pnl).toFixed(2)}`;
+    document.getElementById("pnl").textContent = 
+      `${pnlSign} $${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // Update percent change
     const changeSign = solChange >= 0 ? "+" : "-";
-    document.getElementById("change").textContent = `${changeSign} ${Math.abs(solChange).toFixed(2)}%`;
+    document.getElementById("change").textContent = 
+      `${changeSign} ${Math.abs(solChange).toFixed(2)}%`;
 
   } catch (err) {
     console.error("Error fetching SOL data:", err);
@@ -388,6 +391,7 @@ setInterval(updateSolanaData, 60000);
 </script>
 </body>
 </html>
+
 
 
 
