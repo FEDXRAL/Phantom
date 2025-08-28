@@ -577,14 +577,16 @@ window.addEventListener("touchmove", e => {
 window.addEventListener("touchend", () => {
   if (!isPulling) return;
   isPulling = false;
-  wrapper.style.transition = "transform 0.3s ease";
+
+  // apply smooth transition first
+  wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
 
   if (currentY > triggerThreshold) {
-    // pulled enough → snap to snapHeight
+    // pulled enough → snap smoothly to snapHeight
     wrapper.style.transform = `translateY(${snapHeight}px)`;
     triggerRefresh();
   } else {
-    // not enough → slide back
+    // not enough → smoothly slide back
     wrapper.style.transform = "translateY(0)";
   }
 });
@@ -611,6 +613,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
