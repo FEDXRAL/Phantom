@@ -541,36 +541,9 @@ updateSolanaData();
 
 // Refresh every minute
 setInterval(updateSolanaData, 60000);
-
-
-        let isRefreshing = false;
-let startY = 0;
-
-window.addEventListener("touchstart", e => {
-  if (window.scrollY === 0) {
-    startY = e.touches[0].clientY;
-  }
-});
-
-window.addEventListener("touchend", e => {
-  if (window.scrollY === 0 && e.changedTouches[0].clientY > startY + 50 && !isRefreshing) {
-    triggerRefreshSpinner();
-  }
-});
-
-function triggerRefreshSpinner() {
-  isRefreshing = true;
-  const spinner = document.getElementById("refresh-spinner");
-  spinner.classList.add("active");
-
-  // suspend for 2 seconds
-  setTimeout(() => {
-    spinner.classList.remove("active");
-    isRefreshing = false;
-  }, 2000);
-}
 </script>
 </body>
 </html>
+
 
 
