@@ -557,7 +557,8 @@ const wrapper = document.getElementById("content-wrapper");
 let startY = 0;
 let currentY = 0;
 let isPulling = false;
-const snapHeight = 80; // px at which it suspends
+const snapHeight = 80;    // visual suspend position
+const triggerThreshold = 100; // how far user must pull to trigger
 let isRefreshing = false;
 let refreshCount = 0; // track number of refreshes
 
@@ -574,7 +575,7 @@ window.addEventListener("touchmove", e => {
   currentY = e.touches[0].clientY - startY;
   if (currentY > 0) {
     // dampen pull: slower as you drag more
-    let pull = Math.min(currentY * 0.5, snapHeight * 2);
+    let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
     wrapper.style.transform = `translateY(${pull}px)`;
   }
 });
@@ -584,7 +585,7 @@ window.addEventListener("touchend", () => {
   isPulling = false;
   wrapper.style.transition = "transform 0.3s ease";
 
-  if (currentY > 50) {
+  if (currentY > triggerThreshold) {
     // pulled enough → snap to snapHeight
     wrapper.style.transform = `translateY(${snapHeight}px)`;
     triggerRefresh();
@@ -596,8 +597,7 @@ window.addEventListener("touchend", () => {
 
 function triggerRefresh() {
   isRefreshing = true;
-
-  refreshCount++; // increment counter each refresh
+  refreshCount++;
 
   // Decide what to call depending on refresh count
   if (refreshCount === 1 || refreshCount === 2) {
@@ -617,6 +617,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
