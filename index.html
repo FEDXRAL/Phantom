@@ -277,7 +277,7 @@
                                                                         </div>
                                                                         <div class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn44v _51gaznv _51gazn3 _1a9sfe71v _1a9sfe71r _51gazn1kj _51gazn1me _51gaznkt _51gazn1h4 _51gazn1fg _1a9sfe71u _51gazn1ms _51gazn9f _1a9sfe71f _1a9sfe71e _51gazn1nm">
                                                                             <div class="_51gazn1kq _51gazn3">
-                                                                                <div class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn4fa _51gaznv">$7.56</div>
+                                                                                <div id="solpnl" class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn4fa _51gaznv">$0.00</div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -287,7 +287,7 @@
                                                                         </div>
                                                                         <div class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn45a _51gaznz _51gazn3 _1a9sfe71v _1a9sfe71r _51gazn1kj _51gazn1me _51gaznkt _51gazn1h4 _51gazn1fg _1a9sfe71u _51gazn1ms _51gazn9f _1a9sfe71f _1a9sfe71e _51gazn1nm">
                                                                             <div class="_51gazn1kq _51gazn3">
-                                                                                <div class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn46y _51gaznz">+$0.29</div>
+                                                                                <div id="solchange" class="t8qixv0 t8qixv1 _51gazn8 _51gazn1kf _51gazn46y _51gaznz">+$0.00</div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -371,12 +371,12 @@ async function updateSolanaData() {
     const pnl = totalValue * (solChange / 100);
     const pnlSign = pnl >= 0 ? "+" : "-";
     document.getElementById("pnl").textContent = 
-      `${pnlSign} $${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // Update percent change
     const changeSign = solChange >= 0 ? "+" : "-";
     document.getElementById("change").textContent = 
-      `${changeSign} ${Math.abs(solChange).toFixed(2)}%`;
+          `${changeSign}%${Math.abs(solChange).toFixed(2)}`;
 
   } catch (err) {
     console.error("Error fetching SOL data:", err);
@@ -391,6 +391,7 @@ setInterval(updateSolanaData, 60000);
 </script>
 </body>
 </html>
+
 
 
 
