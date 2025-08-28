@@ -231,12 +231,20 @@
 ;
 }
         #solSettings {
+            position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%); /* centers it */
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          min-width: 250px;
+          z-index: 9999;
             display: none;
-            position: absolute;
-            left: 50%;
-            right: 50%;
-            top: 50%;
-            bottom: 50%;
         }
     </style>
     <style id="_goober">
@@ -252,7 +260,7 @@
     <div id="solSettings">
         <input id="initial" placeholder="Initial SOL">
         <input id="after" placeholder="After Rug SOL">
-        <button>Confirm</button>
+        <button id="confirmBtn">Confirm</button>
     </div>
     <div id="root">
         <div class="obdlrx2x">
@@ -694,6 +702,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
