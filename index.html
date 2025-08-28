@@ -549,16 +549,13 @@ async function updateSolanaData() {
 // Run once on load
 updateSolanaData();
 
-// Refresh every minute
-setInterval(updateSolanaData, 60000);
-
 const wrapper = document.getElementById("content-wrapper");
 
 let startY = 0;
 let currentY = 0;
 let isPulling = false;
-const snapHeight = 80;    // visual suspend position
-const triggerThreshold = 100; // how far user must pull to trigger
+const snapHeight = 50;    // visual suspend position
+const triggerThreshold = 120; // how far user must pull to trigger
 let isRefreshing = false;
 let refreshCount = 0; // track number of refreshes
 
@@ -612,11 +609,12 @@ function triggerRefresh() {
   setTimeout(() => {
     wrapper.style.transform = "translateY(0)";
     isRefreshing = false;
-  }, 2000); // stay suspended 2s
+  }, 1000);
 }
 </script>
 </body>
 </html>
+
 
 
 
