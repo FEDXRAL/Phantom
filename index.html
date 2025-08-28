@@ -573,10 +573,10 @@ window.addEventListener("touchmove", e => {
     let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
     wrapper.style.transform = `translateY(${pull}px)`;
 
-    // spinner margin-bottom grows with pull
-    // e.g. pull 150px → margin-bottom +75px
+    // spinner floats upward: margin-top goes negative
+    // Example: pull 150px → spinner marginTop = -75px
     let extra = Math.min(currentY * 0.5, 75); 
-    spinner.style.marginBottom = `${extra}px`;
+    spinner.style.marginTop = `${-extra}px`;
   }
 });
 
@@ -585,15 +585,15 @@ window.addEventListener("touchend", () => {
   isPulling = false;
 
   wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
-  spinner.style.transition = "margin-bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+  spinner.style.transition = "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
 
   if (currentY > triggerThreshold) {
     wrapper.style.transform = `translateY(${snapHeight}px)`;
-    spinner.style.marginBottom = "0px"; // snap back
+    spinner.style.marginTop = "0px"; // snap back into place
     triggerRefresh();
   } else {
     wrapper.style.transform = "translateY(0)";
-    spinner.style.marginBottom = "0px"; // snap back
+    spinner.style.marginTop = "0px"; // snap back into place
   }
 });
 
@@ -619,6 +619,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
