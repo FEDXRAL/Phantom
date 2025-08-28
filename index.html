@@ -575,7 +575,7 @@ window.addEventListener("touchmove", e => {
 
     // make spinner "float" apart
     // base margin = 1.6rem (~25px), then add more depending on pull
-    let extra = Math.min(pull * 0.4, 80); // cap so it doesn’t fly away
+    let extra = pull * 0.3;   // half the pull
     spinner.style.marginTop = `${25 + extra}px`;
   }
 });
@@ -620,6 +620,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
