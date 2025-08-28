@@ -633,8 +633,10 @@ function triggerRefresh() {
   if (refreshCount === 1 || refreshCount === 2) {
     updateSolanaData();
   } else if (refreshCount === 3) {
-    updatePull();
-    updateSolanaData();
+    setTimeout(() => {
+      updatePull();
+      updateSolanaData();
+    }, 500);
   } else {
     updateSolanaData();
   }
@@ -650,6 +652,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
