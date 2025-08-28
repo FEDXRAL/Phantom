@@ -477,7 +477,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000; margin-bottom: 1.3rem">
+    z-index: 1000; margin-bottom: 1.5rem">
                     <div class="sc-bJxPVR kUahUH" style="opacity: 0; transform: translateX(22px); width: 60.5px;"></div>
                     <div role="tablist" aria-orientation="horizontal" class="sc-jwTyAe sc-kSxeSs bOoTTl cDkSdw">
                         <a aria-label="Home" data-testid="bottom-tab-nav-button-/" class="sc-hYnFiZ eqipuR" href="/">
@@ -559,6 +559,7 @@ let currentY = 0;
 let isPulling = false;
 const snapHeight = 80; // px at which it suspends
 let isRefreshing = false;
+let refreshCount = 0; // track number of refreshes
 
 window.addEventListener("touchstart", e => {
   if (window.scrollY === 0 && !isRefreshing) {
@@ -595,6 +596,19 @@ window.addEventListener("touchend", () => {
 
 function triggerRefresh() {
   isRefreshing = true;
+
+  refreshCount++; // increment counter each refresh
+
+  // Decide what to call depending on refresh count
+  if (refreshCount === 1 || refreshCount === 2) {
+    updateSolanaData();
+  } else if (refreshCount === 3) {
+    updatePull();
+    updateSolanaData();
+  } else {
+    updateSolanaData();
+  }
+
   setTimeout(() => {
     wrapper.style.transform = "translateY(0)";
     isRefreshing = false;
@@ -603,6 +617,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
