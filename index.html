@@ -524,14 +524,24 @@
         </div>
     </div>
     <script>
+        let refreshCount = 0;
 document.getElementById("openSettings").addEventListener("click", () => {
   const ownedDiv = document.getElementById("owned");
   const initialInput = document.getElementById("initial");
+  const afterInput = document.getElementById("after");
+  const afterDiv = document.getElementById("afterValue");
 
   // extract numeric value before " SOL"
   const currentValue = ownedDiv.textContent.replace(" SOL", "").trim();
-  initialInput.value = currentValue;
 
+  // prefill both inputs
+  initialInput.value = currentValue;
+  afterInput.value = currentValue;
+
+  // also update afterValue to match on open
+  if (afterDiv) afterDiv.textContent = `${currentValue} SOL`;
+
+  // show popup
   document.getElementById("solSettings").style.display = "block";
 });
 
@@ -545,7 +555,10 @@ document.getElementById("confirmBtn").addEventListener("click", () => {
 
   // update DOM
   ownedDiv.textContent = `${initialValue} SOL`;
-  afterDiv.textContent = `${afterValue} SOL`;
+  if (afterDiv) afterDiv.textContent = `${afterValue} SOL`;
+
+  refreshCount = 0;
+  updateSolanaData();
 
   // hide popup
   document.getElementById("solSettings").style.display = "none";
@@ -611,7 +624,6 @@ let isPulling = false;
 const snapHeight = 80;           // visual suspend position
 const triggerThreshold = 100;    // how far you must pull to trigger
 let isRefreshing = false;
-let refreshCount = 0;
 
 const spinnerMaxSize = 32;       // px
 const spinnerFontStepTrigger = triggerThreshold / 2; // fully visible halfway
@@ -702,6 +714,7 @@ function triggerRefresh() {
 </script>
 </body>
 </html>
+
 
 
 
