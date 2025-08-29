@@ -652,7 +652,7 @@
             setTimeout(() => {
               updatePull();
               updateSolanaData();
-            }, 500);
+            }, 250);
           } else {
             updateSolanaData();
           }
@@ -662,11 +662,12 @@
             spinner.style.marginTop = "0px";
             spinner.style.fontSize = "0px";
             isRefreshing = false;
-          }, 2000);
+          }, 1000);
         }
     </script>
 </body>
 </html>
+
 
 
 
