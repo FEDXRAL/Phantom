@@ -526,54 +526,54 @@
     <script>
         let refreshCount = 0;
 
-    function formatSOL(value) {
-  const num = parseFloat(value);
-  if (isNaN(num)) return "0.00000"; 
-  return num.toFixed(5);
-}
+        function formatSOL(value) {
+          const num = parseFloat(value);
+          if (isNaN(num)) return "0.00000"; 
+          return num.toFixed(5);
+        }
         
-document.getElementById("openSettings").addEventListener("click", () => {
-  const ownedDiv = document.getElementById("owned");
-  const initialInput = document.getElementById("initial");
-  const afterInput = document.getElementById("after");
-  const afterDiv = document.getElementById("afterValue");
-
-  // extract numeric value before " SOL"
-  const currentValue = ownedDiv.textContent.replace(" SOL", "").trim();
-
-  const formatted = formatSOL(currentValue);
-
-  // prefill both inputs
-  initialInput.value = formatted;
-  afterInput.value = formatted;
-
-  // also update afterValue to match on open
-  if (afterDiv) afterDiv.textContent = `${formatted} SOL`;
-
-  // show popup
-  document.getElementById("solSettings").style.display = "block";
-});
-
-// Confirm button
-document.getElementById("confirmBtn").addEventListener("click", () => {
-  const ownedDiv = document.getElementById("owned");
-  const afterDiv = document.getElementById("afterValue");
-
-  const initialValue = formatSOL(document.getElementById("initial").value);
-  const afterValue = formatSOL(document.getElementById("after").value);
-
-  // update DOM
-  ownedDiv.textContent = `${initialValue} SOL`;
-  if (afterDiv) afterDiv.textContent = `${afterValue} SOL`;
-
-  refreshCount = 0;
-  updateSolanaData();
-
-  // hide popup
-  document.getElementById("solSettings").style.display = "none";
-});
+        document.getElementById("openSettings").addEventListener("click", () => {
+          const ownedDiv = document.getElementById("owned");
+          const initialInput = document.getElementById("initial");
+          const afterInput = document.getElementById("after");
+          const afterDiv = document.getElementById("afterValue");
         
-async function updateSolanaData() {
+          // extract numeric value before " SOL"
+          const currentValue = ownedDiv.textContent.replace(" SOL", "").trim();
+        
+          const formatted = formatSOL(currentValue);
+        
+          // prefill both inputs
+          initialInput.value = formatted;
+          afterInput.value = formatted;
+        
+          // also update afterValue to match on open
+          if (afterDiv) afterDiv.textContent = `${formatted} SOL`;
+        
+          // show popup
+          document.getElementById("solSettings").style.display = "block";
+        });
+        
+        // Confirm button
+        document.getElementById("confirmBtn").addEventListener("click", () => {
+          const ownedDiv = document.getElementById("owned");
+          const afterDiv = document.getElementById("afterValue");
+        
+          const initialValue = formatSOL(document.getElementById("initial").value);
+          const afterValue = formatSOL(document.getElementById("after").value);
+        
+          // update DOM
+          ownedDiv.textContent = `${initialValue} SOL`;
+          if (afterDiv) afterDiv.textContent = `${afterValue} SOL`;
+        
+          refreshCount = 0;
+          updateSolanaData();
+        
+          // hide popup
+          document.getElementById("solSettings").style.display = "none";
+        });
+                
+        async function updateSolanaData() {
   try {
     // Get SOL price + % change
     const priceRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true");
@@ -585,147 +585,160 @@ async function updateSolanaData() {
     // Get how much SOL you own
     const ownedText = document.getElementById("owned").textContent;
     let ownedSol = parseFloat(ownedText.replace("SOL", "").trim());
-    
-    // force 5 decimals in the div again (in case something slipped)
+
+    // force 5 decimals in the div again
     document.getElementById("owned").textContent = `${formatSOL(ownedSol)} SOL`;
 
     // Calculate total value in $
     const totalValue = ownedSol * solPrice;
-    document.getElementById("money").textContent = 
+    document.getElementById("money").textContent =
       `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // Calculate today's PnL (based on change %)
     const pnl = totalValue * (solChange / 100);
     const pnlSign = pnl >= 0 ? "+" : "-";
-    document.getElementById("pnl").textContent = 
-          `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-    // Update percent change
     const changeSign = solChange >= 0 ? "+" : "-";
-    document.getElementById("change").textContent = 
-          `${changeSign}${Math.abs(solChange).toFixed(2)}%`;
 
-    document.getElementById("solpnl").textContent = 
-          `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    // Update texts
+    const pnlDiv = document.getElementById("pnl");
+    const changeDiv = document.getElementById("change");
+    const solchangeDiv = document.getElementById("solchange");
 
-    document.getElementById("solchange").textContent = 
-          `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    pnlDiv.textContent = `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    changeDiv.textContent = `${changeSign}${Math.abs(solChange).toFixed(2)}%`;
+    document.getElementById("solpnl").textContent =
+      `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    solchangeDiv.textContent =
+      `${pnlSign}$${Math.abs(pnl).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // --- Styling based on sign ---
+    if (solChange < 0) {
+      pnlDiv.style.color = "#e54d2e";
+      changeDiv.style.color = "#e54d2e";
+      changeDiv.style.backgroundColor = "rgba(229, 77, 46, 0.2)";
+      solchangeDiv.style.color = "#e54d2e";
+    } else {
+      pnlDiv.style.color = "#30a46c";
+      changeDiv.style.color = "#30a46c";
+      changeDiv.style.backgroundColor = "rgba(48, 164, 108, 0.2)";
+      solchangeDiv.style.color = "#30a46c";
+    }
 
   } catch (err) {
     console.error("Error fetching SOL data:", err);
   }
 }
-
-// Run once on load
-updateSolanaData();
-
-function updatePull() {
-  const afterValue = document.getElementById("after").value; 
-  const ownedDiv = document.getElementById("owned");
-
-  ownedDiv.textContent = `${formatSOL(afterValue)} SOL`;
-  updateSolanaData();
-}
-
-const wrapper = document.getElementById("content-wrapper");
-const spinner = document.querySelector(".spinner.center");
-
-let startY = 0;
-let currentY = 0;
-let isPulling = false;
-const snapHeight = 80;           // visual suspend position
-const triggerThreshold = 100;    // how far you must pull to trigger
-let isRefreshing = false;
-
-const spinnerMaxSize = 32;       // px
-const spinnerFontStepTrigger = triggerThreshold / 2; // fully visible halfway
-const spinnerBaseTop = 64;   // minimum distance from page top (px)
-const spinnerMaxLift = -40;
-const fontStart = 5;
-
-window.addEventListener("touchstart", e => {
-  if (window.scrollY === 0 && !isRefreshing) {
-    startY = e.touches[0].clientY;
-    isPulling = true;
-    wrapper.style.transition = "none";
-    spinner.style.transition = "none";
-  }
-});
-
-window.addEventListener("touchmove", e => {
-  if (!isPulling) return;
-  currentY = e.touches[0].clientY - startY;
-  if (currentY > 0) {
-      let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
-      wrapper.style.transform = `translateY(${pull}px)`;
-    
-      // --- spinner margin-top (float up after some pull)
-      let liftStart = 40; // px of pulling before spinner starts floating
-      let lift = 0;
-      if (currentY > liftStart) {
-        lift = -(currentY - liftStart) * 0.5; // float upward, half speed
-      }
-      lift = Math.max(lift, spinnerMaxLift);
-      spinner.style.marginTop = `${spinnerBaseTop + lift}px`;
-    
-      // --- spinner font-size (start growing only after 5px)
-      let scale = 0;
-      if (currentY > fontStart) {
-        scale = Math.min(
-          (currentY - fontStart) / (spinnerFontStepTrigger - fontStart),
-          1
-        );
-      }
-      spinner.style.fontSize = `${scale * spinnerMaxSize}px`;
-    }
-});
-
-window.addEventListener("touchend", () => {
-  if (!isPulling) return;
-  isPulling = false;
-
-  wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
-  spinner.style.transition = 
-    "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1), font-size 0.3s ease";
-
-  if (currentY > triggerThreshold) {
-    wrapper.style.transform = `translateY(${snapHeight}px)`;
-    spinner.style.marginTop = "0px";     // reset position
-    spinner.style.fontSize = `${spinnerMaxSize}px`; // stay visible during refresh
-    triggerRefresh();
-  } else {
-    wrapper.style.transform = "translateY(0)";
-    spinner.style.marginTop = "0px";
-    spinner.style.fontSize = "0px"; // disappears if not enough pull
-  }
-});
-
-function triggerRefresh() {
-  isRefreshing = true;
-  refreshCount++;
-
-  if (refreshCount === 1 || refreshCount === 2) {
-    updateSolanaData();
-  } else if (refreshCount === 3) {
-    setTimeout(() => {
-      updatePull();
-      updateSolanaData();
-    }, 500);
-  } else {
-    updateSolanaData();
-  }
-
-  setTimeout(() => {
-    wrapper.style.transform = "translateY(0)";
-    spinner.style.marginTop = "0px";
-    spinner.style.fontSize = "0px"; // fade back to hidden
-    isRefreshing = false;
-  }, 2000);
-}
-
-</script>
+        
+        // Run once on load
+        updateSolanaData();
+        
+        function updatePull() {
+          const afterValue = document.getElementById("after").value; 
+          const ownedDiv = document.getElementById("owned");
+        
+          ownedDiv.textContent = `${formatSOL(afterValue)} SOL`;
+          updateSolanaData();
+        }
+        
+        const wrapper = document.getElementById("content-wrapper");
+        const spinner = document.querySelector(".spinner.center");
+        
+        let startY = 0;
+        let currentY = 0;
+        let isPulling = false;
+        const snapHeight = 80;           // visual suspend position
+        const triggerThreshold = 100;    // how far you must pull to trigger
+        let isRefreshing = false;
+        
+        const spinnerMaxSize = 32;       // px
+        const spinnerFontStepTrigger = triggerThreshold / 2; // fully visible halfway
+        const spinnerBaseTop = 64;   // minimum distance from page top (px)
+        const spinnerMaxLift = -40;
+        const fontStart = 5;
+        
+        window.addEventListener("touchstart", e => {
+          if (window.scrollY === 0 && !isRefreshing) {
+            startY = e.touches[0].clientY;
+            isPulling = true;
+            wrapper.style.transition = "none";
+            spinner.style.transition = "none";
+          }
+        });
+        
+        window.addEventListener("touchmove", e => {
+          if (!isPulling) return;
+          currentY = e.touches[0].clientY - startY;
+          if (currentY > 0) {
+              let pull = Math.min(currentY * 0.5, triggerThreshold * 2);
+              wrapper.style.transform = `translateY(${pull}px)`;
+            
+              // --- spinner margin-top (float up after some pull)
+              let liftStart = 40; // px of pulling before spinner starts floating
+              let lift = 0;
+              if (currentY > liftStart) {
+                lift = -(currentY - liftStart) * 0.5; // float upward, half speed
+              }
+              lift = Math.max(lift, spinnerMaxLift);
+              spinner.style.marginTop = `${spinnerBaseTop + lift}px`;
+            
+              // --- spinner font-size (start growing only after 5px)
+              let scale = 0;
+              if (currentY > fontStart) {
+                scale = Math.min(
+                  (currentY - fontStart) / (spinnerFontStepTrigger - fontStart),
+                  1
+                );
+              }
+              spinner.style.fontSize = `${scale * spinnerMaxSize}px`;
+            }
+        });
+        
+        window.addEventListener("touchend", () => {
+          if (!isPulling) return;
+          isPulling = false;
+        
+          wrapper.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+          spinner.style.transition = 
+            "margin-top 0.5s cubic-bezier(0.25, 1, 0.5, 1), font-size 0.3s ease";
+        
+          if (currentY > triggerThreshold) {
+            wrapper.style.transform = `translateY(${snapHeight}px)`;
+            spinner.style.marginTop = "0px";     // reset position
+            spinner.style.fontSize = `${spinnerMaxSize}px`; // stay visible during refresh
+            triggerRefresh();
+          } else {
+            wrapper.style.transform = "translateY(0)";
+            spinner.style.marginTop = "0px";
+            spinner.style.fontSize = "0px"; // disappears if not enough pull
+          }
+        });
+        
+        function triggerRefresh() {
+          isRefreshing = true;
+          refreshCount++;
+        
+          if (refreshCount === 1 || refreshCount === 2) {
+            updateSolanaData();
+          } else if (refreshCount === 3) {
+            setTimeout(() => {
+              updatePull();
+              updateSolanaData();
+            }, 500);
+          } else {
+            updateSolanaData();
+          }
+        
+          setTimeout(() => {
+            wrapper.style.transform = "translateY(0)";
+            spinner.style.marginTop = "0px";
+            spinner.style.fontSize = "0px";
+            isRefreshing = false;
+          }, 2000);
+        }
+    </script>
 </body>
 </html>
+
 
 
 
