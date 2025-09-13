@@ -1,19 +1,19 @@
 {
   "name": "Phantom",
   "short_name": "Phantom",
-  "start_url": "/phantom/",
-  "scope": "/phantom/",
+  "start_url": "/Phantom/",
+  "scope": "/Phantom/",
   "display": "standalone",
-  "background_color": "#1c1c1c",
-  "theme_color": "#1c1c1c",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/Phantom/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/logo.png",
+      "src": "/Phantom/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
