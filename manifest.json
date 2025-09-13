@@ -4,8 +4,8 @@
   "start_url": "/Phantom/",
   "scope": "/Phantom/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#1c1c1c",
+  "theme_color": "#1c1c1c",
   "icons": [
     {
       "src": "/Phantom/icons/icon-192.png",
